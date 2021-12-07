@@ -3,17 +3,34 @@ package br.com.alura.leilao.acceptance.steps;
 import br.com.alura.leilao.model.Lance;
 import br.com.alura.leilao.model.Leilao;
 import br.com.alura.leilao.model.Usuario;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PropondoLanceSteps {
 
     private Lance lance;
     private Leilao leilao;
+    private List<Lance> lista;
+
+    // O Before é executado antes de cada cenário
+    @Before
+    public void iniciarLista() {
+        lista = new ArrayList<>();
+        leilao= new Leilao("Tabela XPTO");
+    }
+
+    @After
+    public void executadoAposCadaCenario(){
+        System.out.printf("será executado após finalizar cada cenário");
+    }
 
     @Given("Dado um lance valido")
     public void dado_um_lance_valido() {
@@ -28,7 +45,6 @@ public class PropondoLanceSteps {
 
     @When("Quando propoe o lance")
     public void quando_propoe_o_lance() {
-        leilao = new Leilao("Tablet XPTO");
         leilao.propoe(lance);
 
 
@@ -39,5 +55,39 @@ public class PropondoLanceSteps {
         Assert.assertEquals(BigDecimal.TEN,leilao.getLances().get(0).getValor());
 
     }
+
+
+//    @Given("varios lances validos")
+//    public void variosLancesValidos() {
+//        Usuario primeiro = new Usuario("fulano");
+//        lanceprimeiro = new Lance(primeiro, BigDecimal.TEN);
+//        Usuario segundo = new Usuario("ciclano");
+//        lancesegundo = new Lance(segundo, new BigDecimal("100"));
+//
+//    }
+
+
+
+    @Given("um lance de {double} do {string}")
+    public void umLanceDeDo(double valor,String nomeUsuario) {
+        Usuario primeiro = new Usuario(nomeUsuario);
+        lance= new Lance(primeiro,new BigDecimal(valor));
+        lista.add(lance);
+
+    }
+
+    @When("propoe varios lances ao leilao")
+    public void propoeVariosLancesAoLeilao() {
+        this.lista.forEach(lance1 -> leilao.propoe(lance1));
+
+    }
+
+    @Then("os lances sao aceito")
+    public void osLancesSaoAceito() {
+        Assert.assertEquals(lista.size(),leilao.getLances().size());
+        Assert.assertEquals(lista.get(0).getValor(),leilao.getLances().get(0).getValor());
+        Assert.assertEquals(lista.get(1).getValor(),leilao.getLances().get(1).getValor());
+    }
+
 
 }
