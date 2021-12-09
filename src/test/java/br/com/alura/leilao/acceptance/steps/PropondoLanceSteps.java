@@ -3,16 +3,20 @@ package br.com.alura.leilao.acceptance.steps;
 import br.com.alura.leilao.model.Lance;
 import br.com.alura.leilao.model.Leilao;
 import br.com.alura.leilao.model.Usuario;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.java.eo.Do;
 import org.junit.Assert;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class PropondoLanceSteps {
 
@@ -50,7 +54,7 @@ public class PropondoLanceSteps {
 
     }
     @Then("entao o lance eh aceito")
-    public void entao_o_lance_eh_aceito() {
+    public void entao_o_lance_eh_aceitos() {
         Assert.assertEquals(1,leilao.getLances().size());
         Assert.assertEquals(BigDecimal.TEN,leilao.getLances().get(0).getValor());
 
@@ -82,12 +86,53 @@ public class PropondoLanceSteps {
 
     }
 
-    @Then("os lances sao aceito")
-    public void osLancesSaoAceito() {
+    @Then("os lances sao aceitos")
+    public void osLancesSaoAceitos() {
         Assert.assertEquals(lista.size(),leilao.getLances().size());
         Assert.assertEquals(lista.get(0).getValor(),leilao.getLances().get(0).getValor());
         Assert.assertEquals(lista.get(1).getValor(),leilao.getLances().get(1).getValor());
     }
 
+
+
+
+    @Then("o lacne nao eh aceito")
+    public void oLacneNaoEhAceito() {
+        Assert.assertEquals(0,leilao.getLances().size());
+    }
+
+
+    @Then("o segundo lance nao eh aceito")
+    public void oSegundoLanceNaoEhAceito() {
+        Assert.assertEquals(1,leilao.getLances().size());
+    }
+
+    @Given("um lance de {double} reais do usuario {string}")
+    public void umLanceDeValorReaisDoUsuarioNomeusuario(Double valor, String nomeUsuario) {
+        lance = new Lance(new Usuario(nomeUsuario),new BigDecimal(valor));
+        lista.add(lance);
+    }
+
+    @Given("um lance invalido de {double} reais do usuario {string}")
+    public void umLanceInvalidoDeValorReaisDoUsuarioNomeusuario(Double valor, String nomeUsuario) {
+        System.out.println(nomeUsuario);
+        lance = new Lance(new BigDecimal(valor));
+
+    }
+
+
+
+    @Given("dois lances")
+    public void dois_lances(DataTable dataTable) {
+        List<Map<String,String>> table = dataTable.asMaps();
+
+        for(Map<String,String> mapa : table){
+            String valor= mapa.get("valor");
+            String nomeUsuario = mapa.get("nomeusuario");
+            lance = new Lance(new Usuario(nomeUsuario),new BigDecimal(valor));
+            lista.add(lance);
+
+        }
+    }
 
 }

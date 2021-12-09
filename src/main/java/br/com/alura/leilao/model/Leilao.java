@@ -128,12 +128,19 @@ public class Leilao {
 	}
 
 	public boolean propoe(Lance lanceAtual) {
+		if(!ehvalido(lanceAtual)){
+			return  false;
+		}
 		
 		if (this.estaSemLances() || ehUmLanceValido(lanceAtual)) {
 			adicionarLance(lanceAtual);
 			return true;
 		}
 		return false;
+	}
+
+	private boolean ehvalido(Lance lanceAtual) {
+		return lanceAtual.getValor().compareTo(BigDecimal.ZERO) > 0 ;
 	}
 
 	private void adicionarLance(Lance lance) {
