@@ -26,6 +26,12 @@ public class LeiloesPage {
 				driver.getPageSource().contains(valor);
 	}
 
+	public boolean existeLeilao(String nomeProduto, String valor, String data,String usuario) {
+		return driver.getCurrentUrl().endsWith("/leiloes") && driver.getPageSource().contains(nomeProduto) &&
+				driver.getPageSource().contains(valor) && driver.getPageSource().contains(data) &&
+				driver.getPageSource().contains(usuario);
+	}
+
 	public NovoLeilaoPage visitaPaginaParaCriarUmNovoLeilao() {
 		
 		WebDriverWait wait = new WebDriverWait(driver,5);
